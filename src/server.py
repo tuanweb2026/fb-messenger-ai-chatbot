@@ -9,11 +9,12 @@ app = Flask(__name__,
 
 VERIFY_TOKEN = os.environ.get("FB_VERIFY_TOKEN", "MY_SECURE_VERIFY_TOKEN_123")
 
+# 1. LANDING PAGE CHÀO BÁN DỊCH VỤ
 @app.route('/')
 def home():
-    return redirect(url_for('dashboard'))
+    return render_template('landing.html')
 
-# 1. FACEBOOK WEBHOOK ENDPOINT
+# 2. FACEBOOK WEBHOOK ENDPOINT
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
     # Xác minh Webhook từ Facebook Meta Developer Portal
@@ -55,7 +56,7 @@ def webhook():
             return "EVENT_RECEIVED", 200
         return "Not a page event", 404
 
-# 2. DASHBOARD REVIEW CHO SẾP
+# 3. DASHBOARD REVIEW CHO SẾP
 @app.route('/dashboard')
 def dashboard():
     conversations = get_all_conversations()
@@ -73,7 +74,7 @@ def dashboard():
                            selected_sender=selected_sender, 
                            messages=messages)
 
-# 3. GIẢ LẬP MESSENGER CHAT ĐỂ SẾP TEST THỬ
+# 4. GIẢ LẬP MESSENGER CHAT ĐỂ SẾP TEST THỬ
 @app.route('/simulator')
 def simulator():
     return render_template('simulator.html')

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoReply AI - Giải Pháp Trợ Lý AI Chăm Sóc Khách Hàng 24/7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800/80 sticky top-0 bg-slate-900/90 backdrop-blur-md z-50">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-robot text-lg"></i>
+                </div>
+                <span class="text-xl font-black tracking-tight text-white">AutoReply <span class="text-blue-500">AI</span></span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-300">
+                <a href="#features" class="hover:text-blue-400 transition">Tính năng</a>
+                <a href="#demo" class="hover:text-blue-400 transition">Trải nghiệm thử</a>
+                <a href="#pricing" class="hover:text-blue-400 transition">Bảng giá</a>
+                <a href="#contact" class="hover:text-blue-400 transition">Tư vấn</a>
+            </nav>
+            <a href="#demo" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-blue-600/30 text-sm transition">
+                Dùng thử Demo
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-20 overflow-hidden">
+        <div class="absolute inset-0 -z-10 flex items-center justify-center">
+            <div class="w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[140px]"></div>
+            <div class="w-[400px] h-[400px] bg-indigo-600/15 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center space-x-2 bg-blue-950/60 border border-blue-500/30 px-4 py-1.5 rounded-full text-blue-400 text-xs font-bold mb-6">
+                <span class="flex h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
+                <span>Công nghệ AI Agent RAG thế hệ mới</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-white mb-6">
+                Đừng để mất đơn hàng chỉ vì <br>
+                <span class="bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+                    trả lời tin nhắn khách chậm 5 phút!
+                </span>
+            </h1>
+
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Hệ thống AI Chatbot tự động đọc hiểu toàn bộ tài liệu (PDF, bảng giá, quy chế) của bạn để <b>chăm sóc và chốt đơn tự nhiên 24/7 trên Facebook Messenger</b>. Sếp có Dashboard theo dõi 100% lịch sử.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="/simulator" target="_blank" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-extrabold px-8 py-4 rounded-2xl shadow-xl shadow-blue-600/40 text-base transition flex items-center justify-center">
+                    <i class="fa-solid fa-play mr-2 text-sm"></i> Test Thử Trực Tiếp (Live Demo)
+                </a>
+                <a href="#pricing" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 font-bold px-8 py-4 rounded-2xl text-base transition">
+                    Xem Báo Giá Triển Khai
+                </a>
+            </div>
+
+            <!-- Social Proof -->
+            <div class="mt-14 pt-10 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div>
+                    <p class="text-3xl font-black text-white">0.5s</p>
+                    <p class="text-xs text-slate-400 mt-1">Tốc độ phản hồi tức thì</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-black text-emerald-400">24/7/365</p>
+                    <p class="text-xs text-slate-400 mt-1">Không bao giờ nghỉ phép</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-black text-blue-400">100%</p>
+                    <p class="text-xs text-slate-400 mt-1">Chính xác theo tài liệu PDF</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-black text-purple-400">0 VNĐ</p>
+                    <p class="text-xs text-slate-400 mt-1">Chi phí lương phụ cấp đêm</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nỗi đau khách hàng -->
+    <section class="py-20 bg-slate-950/60 border-y border-slate-800/80">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-xs font-extrabold text-blue-500 uppercase tracking-widest mb-2">Vấn đề của bạn</h2>
+                <p class="text-3xl font-black text-white">Bạn đang đối mặt với những khó khăn này?</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-slate-900 border border-red-500/20 p-6 rounded-3xl relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Rơi rụng khách lúc đêm muộn</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        60% khách mua hàng lướt xem và nhắn tin từ 22h - 2h sáng. Khi nhân viên ngủ, khách chờ quá lâu sẽ sang đối thủ mua ngay.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 border border-amber-500/20 p-6 rounded-3xl relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Tư vấn viên trả lời sai giá</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Nhân viên mới chưa thuộc hết hàng trăm mã sản phẩm hoặc quên chính sách bảo hành, gây mất uy tín với khách hàng.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 border border-blue-500/20 p-6 rounded-3xl relative overflow-hidden">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-4">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Chi phí nhân sự trực chat cao</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Phải trả 6-10 triệu/tháng cho 1 nhân sự trực chat nhưng hiệu suất không đồng đều, dễ nghỉ việc bất ngờ.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Giải pháp của chúng tôi -->
+    <section id="features" class="py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-xs font-extrabold text-blue-500 uppercase tracking-widest mb-2">Tính năng vượt trội</h2>
+                <p class="text-3xl font-black text-white">Tại sao AutoReply AI vượt xa Chatbot thông thường?</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-slate-800/60 border border-slate-700/70 p-8 rounded-3xl flex items-start space-x-5">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex-shrink-0 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white mb-2">Học trực tiếp từ file PDF / Word của bạn</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Không cần cài đặt kịch bản rườm rà. Bạn chỉ cần ném bảng giá, tài liệu chính sách vào, AI sẽ tự động đọc hiểu và trả lời đúng chuẩn xác.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/70 p-8 rounded-3xl flex items-start space-x-5">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex-shrink-0 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white mb-2">Trò chuyện tự nhiên như người thật</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Khác biệt hoàn toàn với bot phím bấm cứng nhắc. AI hiểu văn phong tiếng Việt, tiếng lóng, nhận diện đúng ý định của khách hàng.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/70 p-8 rounded-3xl flex items-start space-x-5">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex-shrink-0 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white mb-2">Dashboard riêng cho Sếp Review</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Toàn bộ lịch sử trao đổi được lưu vào cơ sở dữ liệu riêng. Sếp có thể vào đọc lại bất kỳ lúc nào để nắm bắt nhu cầu của thị trường.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/60 border border-slate-700/70 p-8 rounded-3xl flex items-start space-x-5">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex-shrink-0 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold text-white mb-2">Bảo mật dữ liệu tuyệt đối</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Cơ sở dữ liệu độc lập trên máy chủ của bạn, không lo bị lộ danh sách khách hàng hay bảng giá mật ra bên ngoài.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bảng giá dịch vụ -->
+    <section id="pricing" class="py-20 bg-slate-950/60 border-t border-slate-800/80">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-xs font-extrabold text-blue-500 uppercase tracking-widest mb-2">Bảng giá minh bạch</h2>
+                <p class="text-3xl font-black text-white">Chọn gói triển khai phù hợp với doanh nghiệp</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Gói 1: Trải nghiệm -->
+                <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl flex flex-col">
+                    <h3 class="text-lg font-bold text-white mb-1">Gói Khởi Nghiệp</h3>
+                    <p class="text-xs text-slate-400 mb-6">Dành cho cá nhân & shop nhỏ</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-black text-white">2.500.000</span>
+                        <span class="text-sm text-slate-400">VNĐ</span>
+                        <p class="text-xs text-slate-500 mt-1">Phí cài đặt 1 lần duy nhất</p>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-300 mb-8 flex-1">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Kết nối 1 Fanpage Facebook</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Nạp tối đa 3 tài liệu PDF</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Lưu trữ database tin nhắn</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Dashboard Sếp review</li>
+                        <li class="flex items-center text-slate-500"><i class="fa-solid fa-xmark text-slate-600 mr-2"></i> Tùy biến prompt nâng cao</li>
+                    </ul>
+                    <a href="#contact" class="w-full text-center bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl transition text-sm">
+                        Đăng Ký Gói Này
+                    </a>
+                </div>
+
+                <!-- Gói 2: Phổ biến nhất -->
+                <div class="bg-gradient-to-b from-blue-950/60 to-slate-900 border-2 border-blue-500 p-8 rounded-3xl flex flex-col relative shadow-2xl shadow-blue-500/20">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-black px-4 py-1 rounded-full uppercase tracking-wider">
+                        Phổ biến nhất
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Gói Tăng Trưởng (Pro)</h3>
+                    <p class="text-xs text-blue-200 mb-6">Dành cho shop đang chạy quảng cáo</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-black text-white">4.900.000</span>
+                        <span class="text-sm text-slate-400">VNĐ</span>
+                        <p class="text-xs text-blue-300 mt-1">Setup trọn gói + 1 tháng vận hành</p>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-200 mb-8 flex-1">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i> Kết nối 2 Fanpage Facebook</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i> Không giới hạn tài liệu PDF nạp vào</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i> AI tinh chỉnh chốt đơn theo kịch bản</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i> Dashboard thống kê chuyên sâu</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-blue-400 mr-2"></i> Hỗ trợ kỹ thuật ưu tiên 24/7</li>
+                    </ul>
+                    <a href="#contact" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3 rounded-xl shadow-lg shadow-blue-600/40 transition text-sm">
+                        Đăng Ký Tư Vấn Ngay
+                    </a>
+                </div>
+
+                <!-- Gói 3: Doanh nghiệp -->
+                <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl flex flex-col">
+                    <h3 class="text-lg font-bold text-white mb-1">Gói Doanh Nghiệp</h3>
+                    <p class="text-xs text-slate-400 mb-6">Hệ thống Omni-channel đa kênh</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-black text-white">Liên hệ</span>
+                        <p class="text-xs text-slate-500 mt-1">Tùy biến theo yêu cầu riêng</p>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-300 mb-8 flex-1">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Đa kênh: Messenger, Zalo OA, Web</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Tích hợp CRM / ERP quản lý đơn hàng</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Cài đặt trên hạ tầng Server riêng</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 mr-2"></i> Đào tạo nhân viên sử dụng hệ thống</li>
+                    </ul>
+                    <a href="#contact" class="w-full text-center bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl transition text-sm">
+                        Liên Hệ Báo Giá
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form liên hệ -->
+    <section id="contact" class="py-20">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="bg-gradient-to-br from-slate-800/80 to-slate-900 border border-slate-700 p-8 sm:p-12 rounded-3xl shadow-2xl">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-black text-white">Đăng Ký Trải Nghiệm & Tư Vấn Miễn Phí</h3>
+                    <p class="text-sm text-slate-400 mt-2">
+                        Để lại thông tin, chúng tôi sẽ setup demo bot bằng chính tài liệu của bạn trong 2 giờ làm việc!
+                    </p>
+                </div>
+
+                <form onsubmit="event.preventDefault(); alert('Cảm ơn bạn! Chúng tôi đã tiếp nhận thông tin và sẽ liên hệ hỗ trợ bạn ngay qua Zalo/SĐT nhé!');" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-2">Họ và tên của bạn</label>
+                        <input type="text" required placeholder="Ví dụ: Nguyễn Văn A" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-2">Số điện thoại / Zalo</label>
+                            <input type="tel" required placeholder="09xx xxx xxx" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-2">Link Fanpage của bạn</label>
+                            <input type="url" placeholder="https://facebook.com/..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-2">Ngành nghề kinh doanh / Nhu cầu</label>
+                        <textarea rows="3" placeholder="Ví dụ: Shop thời trang, muốn bot tư vấn size và giá tự động ban đêm..." class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-4 rounded-xl shadow-lg shadow-blue-600/40 text-base transition">
+                        Gửi Yêu Cầu Tư Vấn Ngay
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <p>© 2026 AutoReply AI. Hệ thống phát triển bởi Biệt đội AI Agent.</p>
+    </footer>
+
+</body>
+</html>
