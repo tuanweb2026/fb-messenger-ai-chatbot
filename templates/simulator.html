@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giả Lập Messenger Chatbot - Test Kiến Thức PDF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 h-screen flex items-center justify-center p-4">
+    <!-- Hộp Messenger mô phỏng -->
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md h-[650px] flex flex-col overflow-hidden border border-gray-200">
+        <!-- Messenger Header -->
+        <div class="bg-blue-600 text-white p-4 flex items-center justify-between shadow-md">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <div class="w-10 h-10 rounded-full bg-white text-blue-600 flex items-center justify-center font-black text-lg">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <span class="w-3 h-3 bg-emerald-400 border-2 border-white rounded-full absolute bottom-0 right-0"></span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">Trợ Lý AI Fanpage</h3>
+                    <p class="text-[11px] text-blue-100">Đang hoạt động • Trả lời từ tài liệu PDF</p>
+                </div>
+            </div>
+            <a href="/dashboard" class="text-xs bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-full font-bold transition">
+                Vào Dashboard
+            </a>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50">
+            <!-- Tin nhắn chào mừng mặc định -->
+            <div class="flex items-start space-x-2">
+                <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold mt-1">
+                    AI
+                </div>
+                <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-none p-3 shadow-sm text-xs text-gray-800 max-w-[80%]">
+                    Xin chào bạn! Mình là Trợ lý AI tự động. Bạn có câu hỏi nào về <b>giờ làm việc, bảng giá dịch vụ, chính sách hoàn tiền 100% hay bảo hành</b> không? Mình sẵn sàng giải đáp ngay nhé!
+                </div>
+            </div>
+        </div>
+
+        <!-- Gợi ý câu hỏi nhanh -->
+        <div class="px-4 py-2 bg-gray-50 border-t border-gray-100 flex space-x-2 overflow-x-auto text-[11px]">
+            <button onclick="quickAsk('Giá các gói dịch vụ thế nào?')" class="bg-white border border-gray-300 hover:border-blue-500 px-3 py-1 rounded-full whitespace-nowrap text-gray-700">
+                💰 Bảng giá dịch vụ?
+            </button>
+            <button onclick="quickAsk('Chính sách hoàn tiền ra sao?')" class="bg-white border border-gray-300 hover:border-blue-500 px-3 py-1 rounded-full whitespace-nowrap text-gray-700">
+                🔄 Hoàn tiền 30 ngày?
+            </button>
+            <button onclick="quickAsk('Địa chỉ công ty ở đâu?')" class="bg-white border border-gray-300 hover:border-blue-500 px-3 py-1 rounded-full whitespace-nowrap text-gray-700">
+                📍 Địa chỉ văn phòng?
+            </button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 bg-white border-t border-gray-200 flex items-center space-x-2">
+            <input type="text" id="user-input" placeholder="Nhập tin nhắn như trên Messenger..." 
+                   class="flex-1 px-4 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs text-gray-800"
+                   onkeydown="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()" class="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition shadow">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+
+    function quickAsk(text) {
+        userInput.value = text;
+        sendMessage();
+    }
+
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        // Render tin nhắn của khách
+        chatBox.innerHTML += `
+            <div class="flex items-start justify-end space-x-2">
+                <div class="bg-blue-600 text-white rounded-2xl rounded-tr-none p-3 shadow-sm text-xs max-w-[80%]">
+                    ${text}
+                </div>
+            </div>
+        `;
+        userInput.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Gọi API backend giả lập xử lý
+        const res = await fetch('/api/simulate_chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                sender_id: 'guest_user_999',
+                sender_name: 'Khách Trải Nghiệm (Test)',
+                message: text
+            })
+        });
+        const data = await res.json();
+
+        // Render phản hồi AI
+        setTimeout(() => {
+            chatBox.innerHTML += `
+                <div class="flex items-start space-x-2">
+                    <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold mt-1">
+                        AI
+                    </div>
+                    <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-none p-3 shadow-sm text-xs text-gray-800 max-w-[80%] whitespace-pre-line">
+                        ${data.bot_reply}
+                    </div>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 300);
+    }
+    </script>
+</body>
+</html>
