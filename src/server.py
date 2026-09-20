@@ -1,13 +1,19 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
+from werkzeug.utils import secure_filename
 from src.db import init_db, save_message, get_all_conversations, get_conversation_history
-from src.pdf_knowledge import PDFKnowledgeEngine
+from src.pdf_knowledge import PDFKnowledgeEngine, DOCS_DIR
 from src.fb_service import FacebookMessengerService
 import os
 
 app = Flask(__name__,
             template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'))
+app.secret_key = 'super_secret_boss_key_chatbot'
 
 VERIFY_TOKEN = os.environ.get("FB_VERIFY_TOKEN", "MY_SECURE_VERIFY_TOKEN_123")
+ALLOWED_EXTENSIONS = {'pdf', 'txt', 'md'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # 1. LANDING PAGE CHÀO BÁN DỊCH VỤ
 @app.route('/')
@@ -56,7 +62,7 @@ def webhook():
             return "EVENT_RECEIVED", 200
         return "Not a page event", 404
 
-# 3. DASHBOARD REVIEW CHO SẾP
+# 3. DASHBOARD REVIEW & QUẢN LÝ TRI THỨC CHO SẾP
 @app.route('/dashboard')
 def dashboard():
     conversations = get_all_conversations()
@@ -69,12 +75,44 @@ def dashboard():
         selected_sender = conversations[0]['sender_id']
         messages = get_conversation_history(selected_sender)
         
+    loaded_docs = PDFKnowledgeEngine.get_loaded_files()
+        
     return render_template('dashboard.html', 
                            conversations=conversations, 
                            selected_sender=selected_sender, 
-                           messages=messages)
+                           messages=messages,
+                           docs=loaded_docs)
 
-# 4. GIẢ LẬP MESSENGER CHAT ĐỂ SẾP TEST THỬ
+# 4. TẢI LÊN TÀI LIỆU PDF / HƯỚNG DẪN MỚI
+@app.route('/upload_knowledge', methods=['POST'])
+def upload_knowledge():
+    if 'document' not in request.files:
+        flash("Vui lòng chọn file tài liệu!", "error")
+        return redirect(url_for('dashboard'))
+        
+    file = request.files['document']
+    if file.filename == '':
+        flash("Chưa chọn file nào!", "error")
+        return redirect(url_for('dashboard'))
+        
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        # Giữ lại tên gốc tiếng Việt nếu secure_filename làm rỗng
+        if not filename:
+            filename = "tai_lieu_shop_" + file.filename
+        
+        filepath = os.path.join(DOCS_DIR, filename)
+        file.save(filepath)
+        
+        # Nạp lại toàn bộ tri thức vào bộ nhớ AI
+        PDFKnowledgeEngine.load_documents()
+        flash(f"✅ Đã nạp thành công tài liệu: {filename}. AI Agent đã sẵn sàng trả lời theo tài liệu mới!", "success")
+    else:
+        flash("❌ Chỉ hỗ trợ định dạng file: .pdf, .txt, .md", "error")
+        
+    return redirect(url_for('dashboard'))
+
+# 5. GIẢ LẬP MESSENGER CHAT ĐỂ SẾP TEST THỬ
 @app.route('/simulator')
 def simulator():
     return render_template('simulator.html')
