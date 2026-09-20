@@ -19,6 +19,10 @@
             </div>
         </div>
         <div class="flex items-center space-x-3">
+            <!-- Nút Tải Lại Dữ Liệu Nhanh -->
+            <button onclick="window.location.reload()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center">
+                <i class="fa-solid fa-rotate-right mr-1.5"></i> Làm mới dữ liệu
+            </button>
             <a href="/" class="text-gray-500 hover:text-gray-800 text-sm font-semibold px-3 py-2">
                 Trang Landing Page
             </a>
@@ -55,7 +59,6 @@
                     <p class="text-[11px] text-gray-400 mt-0.5">Tài liệu nạp cho AI học</p>
                 </div>
                 {% if docs %}
-                <!-- Nút XÓA SẠCH TOÀN BỘ FILE ĐỂ TỰ NẠP LẠI TỪ ĐẦU -->
                 <form action="/delete_all_knowledge" method="POST" onsubmit="return confirm('Bạn có chắc muốn XÓA SẠCH toàn bộ file tài liệu đã nạp? Khi xóa hết, AI sẽ chuyển về chế độ chỉ trả lời cơ bản cho đến khi bạn nạp file mới.')">
                     <button type="submit" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px] font-bold px-2.5 py-1.5 rounded-xl border border-rose-200 transition flex items-center" title="Xóa hết file để nạp lại từ đầu">
                         <i class="fa-solid fa-trash-can mr-1"></i> Xóa hết
@@ -100,7 +103,6 @@
                             <span class="text-[10px] text-gray-400 font-medium">{{ d.size }}</span>
                         </div>
                     </div>
-                    <!-- Nút xóa 1 file cụ thể -->
                     <form action="/delete_file/{{ d.name }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa file {{ d.name }}?')">
                         <button type="submit" class="w-7 h-7 rounded-lg text-gray-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition" title="Xóa file này">
                             <i class="fa-solid fa-xmark text-xs"></i>
@@ -123,11 +125,13 @@
 
         <!-- CỘT 2: DANH SÁCH KHÁCH HÀNG (CONVERSATIONS) -->
         <div class="w-80 bg-white rounded-3xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
-            <div class="p-4 border-b border-gray-100 bg-gray-50/70">
-                <h2 class="font-bold text-gray-800 flex items-center text-sm">
-                    <i class="fa-solid fa-users text-blue-600 mr-2"></i> Khách Đã Nhắn ({{ conversations|length }})
-                </h2>
-                <p class="text-[11px] text-gray-400 mt-0.5">Lịch sử chat lưu trữ vào SQLite</p>
+            <div class="p-4 border-b border-gray-100 bg-gray-50/70 flex justify-between items-center">
+                <div>
+                    <h2 class="font-bold text-gray-800 flex items-center text-sm">
+                        <i class="fa-solid fa-users text-blue-600 mr-2"></i> Khách Đã Nhắn ({{ conversations|length }})
+                    </h2>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Lịch sử chat lưu trữ vào SQLite</p>
+                </div>
             </div>
             <div class="flex-1 overflow-y-auto divide-y divide-gray-100">
                 {% for conv in conversations %}
@@ -157,15 +161,18 @@
             <div class="p-4 border-b border-gray-100 bg-gray-50/70 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-                    <span class="font-bold text-gray-800 text-sm">Hội thoại với ID: <code class="text-blue-600 font-mono">{{ selected_sender or 'Chưa chọn khách hàng' }}</code></span>
+                    <span class="font-bold text-gray-800 text-sm">Hội thoại với: <code class="text-blue-600 font-bold">{% for c in conversations %}{% if c.sender_id == selected_sender %}{{ c.sender_name }} ({{ c.sender_id }}){% endif %}{% endfor %}</code></span>
                 </div>
-                <div class="flex items-center space-x-2 text-xs text-gray-500">
-                    <i class="fa-solid fa-database text-blue-500"></i>
+                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                    <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-bold text-[11px]">
+                        {{ messages|length }} tin nhắn
+                    </span>
                     <span>Tự động đồng bộ SQLite</span>
                 </div>
             </div>
 
-            <div class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/40">
+            <!-- Khung tin nhắn cuộn tự động xuống cuối -->
+            <div id="messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/40">
                 {% for msg in messages %}
                 {% if msg.sender_type == 'user' %}
                 <!-- Tin nhắn từ Khách -->
@@ -174,7 +181,7 @@
                         Khách
                     </div>
                     <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-none p-4 max-w-xl shadow-sm text-sm text-gray-800">
-                        <p>{{ msg.content }}</p>
+                        <p class="font-medium">{{ msg.content }}</p>
                         <span class="block text-[10px] text-gray-400 mt-1.5 text-right">{{ msg.created_at }}</span>
                     </div>
                 </div>
@@ -204,5 +211,21 @@
         </div>
 
     </div>
+
+    <script>
+        // Tự động cuộn xuống tin nhắn mới nhất khi mở trang
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        });
+
+        // Tự động làm mới dữ liệu sau mỗi 10 giây nếu bạn đang mở Dashboard quan sát
+        setTimeout(() => {
+            // Chỉ tự động reload nếu không có popup nào đang mở
+            // window.location.reload();
+        }, 10000);
+    </script>
 </body>
 </html>
