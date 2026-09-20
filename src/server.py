@@ -23,19 +23,15 @@ def home():
 # 2. FACEBOOK WEBHOOK ENDPOINT
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
-    # Xác minh Webhook từ Facebook Meta Developer Portal
     if request.method == 'GET':
         mode = request.args.get('hub.mode')
         token = request.args.get('hub.verify_token')
         challenge = request.args.get('hub.challenge')
-        
         if mode == 'subscribe' and token == VERIFY_TOKEN:
-            print("[FB Webhook] Xác thực thành công!")
             return challenge, 200
         else:
             return "Verification token mismatch", 403
 
-    # Tiếp nhận tin nhắn gửi đến từ Facebook Messenger
     if request.method == 'POST':
         data = request.get_json()
         if data.get('object') == 'page':
@@ -43,22 +39,12 @@ def webhook():
                 for messaging_event in entry.get('messaging', []):
                     sender_id = messaging_event.get('sender', {}).get('id')
                     message = messaging_event.get('message', {})
-                    
                     if sender_id and message.get('text'):
                         user_text = message['text']
-                        
-                        # 1. Lưu tin nhắn của khách vào SQLite
                         save_message(sender_id, f"Khách Facebook ({sender_id[-4:]})", 'user', user_text)
-                        
-                        # 2. AI tra cứu kiến thức từ tài liệu PDF/Doc
                         ai_reply = PDFKnowledgeEngine.query(user_text)
-                        
-                        # 3. Lưu phản hồi của bot vào SQLite
                         save_message(sender_id, f"Khách Facebook ({sender_id[-4:]})", 'bot', ai_reply)
-                        
-                        # 4. Gửi tin nhắn trả lời qua Facebook Messenger
                         FacebookMessengerService.send_message(sender_id, ai_reply)
-                        
             return "EVENT_RECEIVED", 200
         return "Not a page event", 404
 
@@ -83,7 +69,7 @@ def dashboard():
                            messages=messages,
                            docs=loaded_docs)
 
-# 4. TẢI LÊN TÀI LIỆU PDF / HƯỚNG DẪN MỚI
+# 4. TẢI LÊN TÀI LIỆU PDF MỚI
 @app.route('/upload_knowledge', methods=['POST'])
 def upload_knowledge():
     if 'document' not in request.files:
@@ -97,22 +83,34 @@ def upload_knowledge():
         
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        # Giữ lại tên gốc tiếng Việt nếu secure_filename làm rỗng
         if not filename:
-            filename = "tai_lieu_shop_" + file.filename
-        
+            filename = "tai_lieu_" + file.filename
         filepath = os.path.join(DOCS_DIR, filename)
         file.save(filepath)
-        
-        # Nạp lại toàn bộ tri thức vào bộ nhớ AI
         PDFKnowledgeEngine.load_documents()
-        flash(f"✅ Đã nạp thành công tài liệu: {filename}. AI Agent đã sẵn sàng trả lời theo tài liệu mới!", "success")
+        flash(f"✅ Đã nạp thành công: {filename}. AI Agent đã được cập nhật tri thức chi tiết!", "success")
     else:
         flash("❌ Chỉ hỗ trợ định dạng file: .pdf, .txt, .md", "error")
         
     return redirect(url_for('dashboard'))
 
-# 5. GIẢ LẬP MESSENGER CHAT ĐỂ SẾP TEST THỬ
+# 5. XÓA 1 FILE TÀI LIỆU CỤ THỂ
+@app.route('/delete_file/<filename>', methods=['POST'])
+def delete_file(filename):
+    if PDFKnowledgeEngine.delete_single_file(filename):
+        flash(f"🗑️ Đã xóa file: {filename}.", "success")
+    else:
+        flash("Không tìm thấy file cần xóa!", "error")
+    return redirect(url_for('dashboard'))
+
+# 6. XÓA TOÀN BỘ TÀI LIỆU ĐÃ NẠP (CHUYỂN VỀ CHẾ ĐỘ TRẢ LỜI CƠ BẢN)
+@app.route('/delete_all_knowledge', methods=['POST'])
+def delete_all_knowledge():
+    PDFKnowledgeEngine.delete_all_files()
+    flash("🧹 Đã xóa sạch toàn bộ tài liệu! AI Agent hiện chuyển sang chế độ CHỈ TRẢ LỜI CƠ BẢN cho đến khi bạn nạp file mới.", "success")
+    return redirect(url_for('dashboard'))
+
+# 7. GIẢ LẬP MESSENGER CHAT ĐỂ SẾP TEST THỬ
 @app.route('/simulator')
 def simulator():
     return render_template('simulator.html')
@@ -124,11 +122,8 @@ def simulate_chat():
     sender_name = data.get('sender_name', 'Khách Thử Nghiệm')
     user_text = data.get('message', '')
     
-    # Lưu tin khách
     save_message(sender_id, sender_name, 'user', user_text)
-    # AI trả lời từ file tài liệu
     ai_reply = PDFKnowledgeEngine.query(user_text)
-    # Lưu tin bot
     save_message(sender_id, sender_name, 'bot', ai_reply)
     
     return jsonify({

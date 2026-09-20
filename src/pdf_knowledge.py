@@ -58,9 +58,41 @@ class PDFKnowledgeEngine:
         return file_list
 
     @staticmethod
+    def delete_all_files():
+        """
+        Xóa toàn bộ file trong thư mục docs/ và làm sạch database tri thức.
+        """
+        if os.path.exists(DOCS_DIR):
+            for f in os.listdir(DOCS_DIR):
+                if f.endswith('.txt') or f.endswith('.md') or f.endswith('.pdf'):
+                    try:
+                        os.remove(os.path.join(DOCS_DIR, f))
+                    except Exception as e:
+                        print(f"Error removing file {f}: {e}")
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM knowledge_chunks")
+        conn.commit()
+        conn.close()
+        print("[Knowledge Base] Đã xóa toàn bộ tài liệu và làm sạch database.")
+
+    @staticmethod
+    def delete_single_file(filename):
+        """
+        Xóa 1 file cụ thể khỏi docs/ và cập nhật lại database.
+        """
+        filepath = os.path.join(DOCS_DIR, filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+            PDFKnowledgeEngine.load_documents()
+            return True
+        return False
+
+    @staticmethod
     def query(user_question):
         """
-        Tìm kiếm thông tin chính xác nhất từ tài liệu PDF/Doc và sinh câu trả lời chuyên nghiệp.
+        - Khi KHÔNG CÓ file tri thức (hoặc đã xóa hết): AI chỉ trả lời cơ bản, xã giao, lịch sự và xin thông tin liên hệ.
+        - Khi ĐÃ NẠP file: AI dựa sát vào tài liệu để trả lời chi tiết, chuyên nghiệp.
         """
         conn = get_db()
         cursor = conn.cursor()
@@ -68,20 +100,26 @@ class PDFKnowledgeEngine:
         rows = cursor.fetchall()
         conn.close()
         
+        # CHẾ ĐỘ 1: CHƯA CÓ HOẶC ĐÃ XÓA HẾT TÀI LIỆU -> CHỈ TRẢ LỜI CƠ BẢN
         if not rows:
-            return "Dạ chào bạn! Hiện tại hệ thống đang được cập nhật tài liệu kiến thức mới. Bạn vui lòng để lại số điện thoại hoặc nhu cầu cụ thể, tư vấn viên của shop sẽ liên hệ hỗ trợ bạn ngay nhé ạ! ❤️"
+            q_lower = user_question.lower()
+            if any(greet in q_lower for greet in ['chào', 'hello', 'hi', 'alo', 'bạn ơi', 'shop ơi']):
+                return "Dạ chào bạn ạ! Cảm ơn bạn đã nhắn tin cho shop. Hiện tại hệ thống chưa nạp tài liệu bảng giá chi tiết. Bạn cần tìm hiểu dịch vụ gì, có thể để lại Số Điện Thoại để nhân viên bên mình gọi tư vấn cụ thể cho bạn nhé ạ!"
+            elif any(ask in q_lower for ask in ['giá', 'nhiêu', 'chi phí', 'bảng giá']):
+                return "Dạ hiện tại bảng giá chi tiết đang được cập nhật ạ. Bạn vui lòng để lại Số Điện Thoại hoặc nhắn rõ dịch vụ bạn đang quan tâm, tư vấn viên bên mình sẽ liên hệ báo giá ưu đãi tốt nhất cho bạn ngay nhé ạ!"
+            elif any(loc in q_lower for loc in ['ở đâu', 'địa chỉ', 'chi nhánh']):
+                return "Dạ shop xin chào bạn ạ! Hiện thông tin địa chỉ cụ thể đang được đồng bộ. Bạn để lại SĐT hoặc khu vực bạn đang ở để shop hướng dẫn chi nhánh thuận tiện nhất cho bạn nhé ạ!"
+            else:
+                return "Dạ cảm ơn bạn đã quan tâm đến shop ạ! Tin nhắn của bạn đã được ghi nhận. Vì chưa có tài liệu hướng dẫn cụ thể cho câu hỏi này, bạn vui lòng để lại SĐT để bên mình hỗ trợ trực tiếp cho bạn nhé ạ! ❤️"
 
-        # Tách từ khóa tìm kiếm (loại bỏ từ nối đơn giản)
+        # CHẾ ĐỘ 2: ĐÃ NẠP TÀI LIỆU -> TRẢ LỜI CHI TIẾT DỰA VÀO TÀI LIỆU
         keywords = [w for w in re.findall(r'\w+', user_question.lower()) if len(w) > 1]
-        
         scored_chunks = []
         for r in rows:
             chunk = r['content']
             chunk_lower = chunk.lower()
-            # Tính điểm tương đồng từ khóa
             score = sum(2 if kw in chunk_lower else 0 for kw in keywords)
-            # Điểm cộng nếu chứa các từ cốt lõi
-            for core in ['giá', 'bao nhiêu', 'chi phí', 'địa chỉ', 'ở đâu', 'hoàn tiền', 'bảo hành', 'hotline', 'giờ', 'thời gian', 'liên hệ']:
+            for core in ['giá', 'bao nhiêu', 'chi phí', 'địa chỉ', 'ở đâu', 'hoàn tiền', 'bảo hành', 'hotline', 'giờ', 'thời gian', 'liên hệ', 'trả góp', 'nhổ', 'implant', 'niềng', 'khôn', 'sứ']:
                 if core in user_question.lower() and core in chunk_lower:
                     score += 3
             if score > 0:
@@ -91,6 +129,6 @@ class PDFKnowledgeEngine:
         
         if scored_chunks and scored_chunks[0][0] >= 2:
             best_chunk = scored_chunks[0][1]
-            return f"Dạ chào bạn! Cảm ơn bạn đã nhắn tin cho shop ạ.\n\nVề thắc mắc của bạn, shop xin gửi thông tin chi tiết:\n\n{best_chunk}\n\n👉 Bạn cần shop hỗ trợ tư vấn thêm chi tiết nào nữa không ạ? Bạn cứ nhắn thoải mái nhé!"
+            return f"Dạ chào bạn! Cảm ơn bạn đã nhắn tin cho shop ạ.\n\nVề thắc mắc của bạn, shop xin gửi thông tin chi tiết từ tài liệu chuyên môn:\n\n{best_chunk}\n\n👉 Bạn để lại Số Điện Thoại hoặc Khung giờ rảnh để shop hỗ trợ tư vấn kỹ hơn và xếp lịch ưu tiên cho bạn ngay nhé ạ! ❤️"
         else:
-            return "Dạ cảm ơn bạn đã quan tâm đến shop ạ! Dạ câu hỏi của bạn hiện chưa có sẵn trong danh mục hướng dẫn nhanh. Shop đã ghi nhận tin nhắn và tư vấn viên trực tiếp sẽ nhắn lại cho bạn ngay sau ít phút nhé ạ! ❤️"
+            return "Dạ cảm ơn bạn đã quan tâm đến shop ạ! Dạ nội dung câu hỏi của bạn hiện chưa được đề cập cụ thể trong tài liệu hướng dẫn có sẵn của shop. Bạn vui lòng để lại Số Điện Thoại, tư vấn viên trực tiếp sẽ liên hệ giải đáp chi tiết cho bạn ngay sau ít phút nhé ạ! ❤️"
